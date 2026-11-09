@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador Cruelty-Free - Huella Consciente</title>
+    <!-- Tipografía Quicksand desde Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ========================================================
+           1. CONFIGURACIÓN DE COLORES (:ROOT)
+           - --color-bg-cream (#FFF3E3): Fondo general cálido y orgánico.
+           - --color-card-bg (#FFFFFF): Blanco puro para contraste limpio.
+           - --color-sage-green (#3B6E4A): Verde principal eco-amigable.
+           - --color-sage-hover (#2E563B): Variante oscura para interactividad.
+           - --color-text-main (#2C3E35): Gris verdoso de alta legibilidad.
+           - --color-text-muted (#6B7C73): Tono secundario para metadatos.
+           - --color-border (#E2D6C8): Límites visuales armónicos y sutiles.
+           ======================================================== */
+        :root {
+            --color-bg-cream: #FFF3E3;
+            --color-card-bg: #c1baab;
+            --color-sage-green: #778C77;
+            --color-sage-hover: #536254;
+            --color-text-main: #837556;
+            --color-text-muted: #536254;
+            --color-border: #FFF3E3;
+            --font-main: 'Quicksand', sans-serif; /* 2. TIPOGRAFÍA: Fuente geométrica amigable y juvenil */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: #EFE6D8; /* Fondo exterior flotante */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* ========================================================
+           3. TAMAÑOS Y CONTENEDOR PRINCIPAL
+           - Ancho: 1848px | Alto: 1044px (Medidas editoriales fijas).
+           - overflow-y: auto (Scroll vertical personalizado y limpio).
+           ======================================================== */
+        .app-container {
+            width: 1848px;
+            height: 1044px;
+            background-color: var(--color-bg-cream);
+            border: 2px solid var(--color-border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 40px 60px;
+            box-shadow: 0 15px 35px rgba(59, 110, 74, 0.1);
+        }
+
+        .app-container::-webkit-scrollbar {
+            width: 12px;
+        }
+        .app-container::-webkit-scrollbar-track {
+            background: #F4EADF;
+            border-radius: 10px;
+        }
+        .app-container::-webkit-scrollbar-thumb {
+            background-color: var(--color-sage-green);
+            border-radius: 10px;
+            border: 3px solid #F4EADF;
+        }
+
+        /* Panel de Filtros Superior */
+        .filters-panel {
+            display: flex;
+            gap: 25px;
+            background-color: #F8EFE3;
+            padding: 25px 30px;
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--color-text-main);
+            font-size: 1rem;
+        }
+
+        .filter-group select {
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--color-border);
+            background-color: #FFFFFF;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            color: var(--color-text-main);
+            outline: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .filter-group select:focus {
+            border-color: var(--color-sage-green);
+            box-shadow: 0 0 0 3px rgba(59, 110, 74, 0.15);
+        }
+
+        /* Cuadrícula Adaptativa de Tarjetas */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+            padding-bottom: 20px;
+        }
+
+        /* Estructura Modular de Tarjeta */
+        .card {
+            background-color: var(--color-card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--color-border);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Efecto Hover tridimensional de elevación */
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(59, 110, 74, 0.12);
+        }
+
+        .card-image-container {
+            width: 100%;
+            height: 200px;
+            background-color: #F4EADF;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .badge-origin {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: rgba(59, 110, 74, 0.9);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .card-content {
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        /* ========================================================
+           4. CONFIGURACIÓN DE ENLACES E INTERACTIVIDAD
+           - .card-brand-link: Convierte el nombre en hipervínculo activo.
+           - target="_blank": Abre la web oficial en pestaña nueva.
+           ======================================================== */
+        .card-brand-link {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-sage-green);
+            text-decoration: none;
+            display: inline-block;
+            transition: color 0.2s;
+        }
+
+        .card-brand-link:hover {
+            color: var(--color-sage-hover);
+            text-decoration: underline;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            color: var(--color-text-main);
+            font-weight: 600;
+        }
+
+        .card-certification {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            line-height: 1.3;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #F0E6DA;
+        }
+
+        .card-category {
+            font-size: 0.85rem;
+            background-color: #F3EBE1;
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
+        .card-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-text-main);
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px;
+            color: var(--color-text-muted);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Panel de Filtros Interactivos -->
+        <div class="filters-panel">
+            <div class="filter-group">
+                <label for="originFilter">Filtrar por Origen:</label>
+                <select id="originFilter" onchange="filterProducts()">
+                    <option value="all">Todos los orígenes</option>
+                    <option value="Colombiana">Colombianas</option>
+                    <option value="Internacional">Internacionales</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="productFilter">Filtrar por Producto:</label>
+                <select id="productFilter" onchange="filterProducts()">
+                    <option value="all">Todos los productos</option>
+                    <option value="Base">Base</option>
+                    <option value="Sombras">Sombras</option>
+                    <option value="Pestañina">Pestañina</option>
+                    <option value="Rubor">Rubor</option>
+                    <option value="Labial">Labial</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Cuadrícula donde se inyectan dinámicamente las tarjetas -->
+        <div id="cardsGrid" class="cards-grid"></div>
+    </div>
+
+    <script>
+        const makeupData = [
+            {
+                name: "Cosméticos Raquel",
+                product: "Primer/base Silky",
+                category: "Base",
+                origin: "Colombiana",
+                priceNumeric: 8600,
+                priceFormatted: "$8,600 – $26,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.cosmeticosraquel.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr9-nvy4Nd6uo8LybHasAIP1b1o011i9GdpsGMgjQwuFy0OzLGrKSSE6W9&s=10"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Pestañina transparente cejas y pestañas",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 14000,
+                priceFormatted: "$14,000 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://maticescosmetics.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9sx-51Mw4hVaxdGW-DB_sHDw3gB8SovKWckg4IKQZ0UeIlaue2jMS4_gy&s=10"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Tinta de labios reparadora",
+                category: "Labial",
+                origin: "Colombiana",
+                priceNumeric: 14000,
+                priceFormatted: "$14,000 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.cosmeticosraquel.com",
+                image: "https://cosmeticosraquel.co/wp-content/uploads/2023/10/Tinta-de-labios-nueva-presentacion.jpg"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Pestañina Avocado WP",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 14800,
+                priceFormatted: "$14,800 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.krika.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTyeI8pU5boDMNWhiQJcqUZXrc9RdYAcGlLC6m1yIU7oB2Ec0JrZBm0pI0&s=10"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Labial Lasting Lip Colour",
+                category: "Labial",
+                origin: "Colombiana",
+                priceNumeric: 18500,
+                priceFormatted: "$18,500 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.cosmeticosraquel.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtpnrW5LAff-hYyo0pezidbifloqJ1KuCaEA_MWt1Tasck_bytfua9bSUL&s=10"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Rubor bronzing",
+                category: "Rubor",
+                origin: "Colombiana",
+                priceNumeric: 18500,
+                priceFormatted: "$18,500 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.cosmeticosraquel.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAVpRZLkJRVC1diOm7D92FJ_4uAIRtaIuXd0T_iDP-GuLn7zQN1KEsHuhv&s=10"
+            },
+            {
+                name: "Miis Cosmetics",
+                product: "Pestañina Miis negra",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 18900,
+                priceFormatted: "$18,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; fundada en Medellín en 2018.",
+                brandUrl: "https://www.fedco.com",
+                image: "https://miiscosmetics.com/cdn/shop/files/MACA03_-_UNIDAD_ABIERTA.png?v=1771870790"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Pestañina 3+ curvas",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 20900,
+                priceFormatted: "$20,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.krika.com",
+                image: "https://pandoramaquillaje.com/wp-content/uploads/2023/10/pestanina-star-charming.jpg"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Labial líquido mate",
+                category: "Labial",
+                origin: "Colombiana",
+                priceNumeric: 20000,
+                priceFormatted: "$20,000 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://maticescosmetics.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUznd-0fIGwReKu7JEKIbOk1DWyv2auXxKJNPXiH2I8A&s=10"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Máscara de pestañas 3 Mas waterproof",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 21000,
+                priceFormatted: "$21,000 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.cosmeticosraquel.com",
+                image: "https://cosmeticosraquel.co/wp-content/uploads/2022/12/Mascara-para-pestanas-3.jpg"
+            },
+            {
+                name: "Natura",
+                product: "Labial cremoso multimix Faces",
+                category: "Labial",
+                origin: "Colombiana",
+                priceNumeric: 21900,
+                priceFormatted: "$21,900 COP",
+                certification: "Aparece en el listado colombiano de PETA; revisa siempre el producto específico.",
+                brandUrl: "https://www.natura.com",
+                image: "https://production.na01.natura.com/on/demandware.static/-/Sites-natura-co-storefront-catalog/default/dwfc2a9f89/products/NATCOL-116198_1.jpg"
+            },
+            {
+                name: "Miis Cosmetics",
+                product: "Rubor Miis Pro",
+                category: "Rubor",
+                origin: "Colombiana",
+                priceNumeric: 22900,
+                priceFormatted: "$22,900 – $24,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; fundada en Medellín en 2018.",
+                brandUrl: "https://www.fedco.com",
+                image: "https://miiscosmetics.com/cdn/shop/files/BLUP03-UNIDAD_SIN_CAJA.png?v=1762812847&width=1946"
+            },
+            {
+                name: "Miis Cosmetics",
+                product: "Rubor Miis Luminoso",
+                category: "Rubor",
+                origin: "Colombiana",
+                priceNumeric: 23900,
+                priceFormatted: "$23,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; fundada en Medellín en 2018.",
+                brandUrl: "https://www.fedco.com",
+                image: "https://miiscosmetics.com/cdn/shop/files/PPR03-UNIDAD.png?v=1763051839&width=1946"
+            },
+            {
+                name: "Natura",
+                product: "Pestañina incolora Faces",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 16900,
+                priceFormatted: "$16,900 – $24,600 COP",
+                certification: "Aparece en el listado colombiano de PETA; revisa siempre el producto específico.",
+                brandUrl: "https://www.natura.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1bogMOab8jWKWJ07e2m3A4WlOxPbZpKgZmyNjvHkaRUIOsJN8uHpc34s&s=10"
+            },
+            {
+                name: "Cosméticos Raquel",
+                product: "Base líquida mate Ultimate Detox",
+                category: "Base",
+                origin: "Colombiana",
+                priceNumeric: 24000,
+                priceFormatted: "$24,000 – $25,000 COP",
+                certification: "Certificada cruelty-free por Te Protejo; marca colombiana de cosmética natural.",
+                brandUrl: "https://www.cosmeticosraquel.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6F1CT-kwgYN0LjcpWjOUUBY78CJw1Xyxa2uA5VQxaGQ&s=10"
+            },
+            {
+                name: "ILOVEPINCH",
+                product: "Labial mate líquido ILOVEPINCH",
+                category: "Labial",
+                origin: "Colombiana",
+                priceNumeric: 24500,
+                priceFormatted: "$24,500 COP",
+                certification: "Reconocida por PETA como libre de crueldad animal; vegana.",
+                brandUrl: "https://www.pigmentta.com",
+                image: "https://sysmaquillaje.com.co/wp-content/uploads/2026/06/10500.jpg"
+            },
+            {
+                name: "Miis Cosmetics",
+                product: "Rubor Miis suelto mosaico",
+                category: "Rubor",
+                origin: "Colombiana",
+                priceNumeric: 38900,
+                priceFormatted: "$38,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; fundada en Medellín en 2018.",
+                brandUrl: "https://www.fedco.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMvevFjQ8_7TOrEPHmvGVanb9EFKbhVg-viyIuk3Qwcg&s=10"
+            },
+            {
+                name: "O Boticário",
+                product: "Bálsamo labial Lip Chronology",
+                category: "Labial",
+                origin: "Colombiana",
+                priceNumeric: 40740,
+                priceFormatted: "$40,740 – $67,900 COP",
+                certification: "Aparece en el listado colombiano de PETA.",
+                brandUrl: "https://www.oboticario.com",
+                image: "https://cdn.shopify.com/s/files/1/0632/5511/8040/files/58813-MAKE-B-BALM-LAB-NIGH-PLUMP-LIP-CHRO-3_6g_2.jpg?v=1762269638"
+            },
+            {
+                name: "O Boticário",
+                product: "Rubor en polvo Make B.",
+                category: "Rubor",
+                origin: "Colombiana",
+                priceNumeric: 43740,
+                priceFormatted: "$43,740 – $72,900 COP",
+                certification: "Aparece en el listado colombiano de PETA.",
+                brandUrl: "https://www.oboticario.com",
+                image: "https://cdn.shopify.com/s/files/1/0632/5511/8040/files/50704-Rubor-en-polvo-acido-poliglutamico-5_5g-Make-B_3.jpg?v=1764097823"
+            },
+            {
+                name: "O Boticário",
+                product: "Base líquida mate Make B.",
+                category: "Base",
+                origin: "Colombiana",
+                priceNumeric: 44940,
+                priceFormatted: "$44,940 – $74,900 COP",
+                certification: "Aparece en el listado colombiano de PETA.",
+                brandUrl: "https://www.oboticario.com",
+                image: "https://cdn.shopify.com/s/files/1/0632/5511/8040/products/82542-1-MAKE-B-BASE-LIQUIDA-MATE-SALICYLICO-COR-140-30-g.jpg?v=1675297542"
+            },
+            {
+                name: "Natura",
+                product: "Pestañina tint lavable Faces",
+                category: "Pestañina",
+                origin: "Colombiana",
+                priceNumeric: 46200,
+                priceFormatted: "$46,200 COP",
+                certification: "Aparece en el listado colombiano de PETA; revisa siempre el producto específico.",
+                brandUrl: "https://www.natura.com",
+                image: "https://production.na01.natura.com/dw/image/v2/BFKR_PRD/on/demandware.static/-/Sites-natura-co-storefront-catalog/default/dwb17a6eab/products/NATCOL-9833_1.jpg"
+            },
+            {
+                name: "ILOVEPINCH",
+                product: "Base Army",
+                category: "Base",
+                origin: "Colombiana",
+                priceNumeric: 47500,
+                priceFormatted: "$47,500 COP",
+                certification: "Reconocida por PETA como libre de crueldad animal; vegana.",
+                brandUrl: "https://www.pigmentta.com",
+                image: "https://http2.mlstatic.com/D_NQ_NP_608132-MLU77738271363_072024-O.webp"
+            },
+            {
+                name: "e.l.f. Cosmetics",
+                product: "Base de maquillaje hidratante e.l.f.",
+                category: "Base",
+                origin: "Internacional",
+                priceNumeric: 62000,
+                priceFormatted: "$62,000 COP",
+                certification: "Doble certificación: Leaping Bunny y PETA; 100% vegana.",
+                brandUrl: "https://www.elfcosmetics.com",
+                image: "https://http2.mlstatic.com/D_Q_NP_2X_965041-MCO81495773425_122024-P.webp"
+            },
+            {
+                name: "BYS Cosmetics",
+                product: "Rubor en stick BYS",
+                category: "Rubor",
+                origin: "Internacional",
+                priceNumeric: 55000,
+                priceFormatted: "$55,000 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.rappi.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsz3HTS3JlQvt9t6E8LiHv2j_DSX6IA786VA4lahthpg56A_5Q5tcGx9w&s=10"
+            },
+            {
+                name: "Essence",
+                product: "Mascara Lash Princess",
+                category: "Pestañina",
+                origin: "Internacional",
+                priceNumeric: 24000,
+                priceFormatted: "$24,000 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.essence.eu",
+                image: "https://prebel.vtexassets.com/arquivos/ids/198979/4059729327024-1.jpg?v=638954475815130000"
+            },
+            {
+                name: "Catrice",
+                product: "Base Liquid Coverage Catrice",
+                category: "Base",
+                origin: "Internacional",
+                priceNumeric: 45000,
+                priceFormatted: "$45,000 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.catrice.eu",
+                image: "https://prebel.vtexassets.com/arquivos/ids/192430-800-auto?v=638865640349930000&width=800&height=auto&aspect=true"
+            },
+            {
+                name: "Too Faced",
+                product: "Base Born This Way",
+                category: "Base",
+                origin: "Internacional",
+                priceNumeric: 185000,
+                priceFormatted: "$185,000 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.toofaced.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ44uuAnskRoiMbA1u3zGVcTF5nscOVowcvoTWIwCNzcWcNCJ_vTqeyClQ&s=10"
+            },
+            {
+                name: "Anastasia Beverly Hills",
+                product: "Paleta de Sombras Modern Renaissance",
+                category: "Sombras",
+                origin: "Internacional",
+                priceNumeric: 240000,
+                priceFormatted: "$240,000 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.anastasiabeverlyhills.com",
+                image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFBRdVlmJm-vvHvwyogCSZBC7bZZGZUWLwnbp9MNjqmJ80mZEIkMYvvEpT&s=10"
+            },
+            {
+                name: "Miis Cosmetics",
+                product: "Paleta de sombras Viajero",
+                category: "Sombras",
+                origin: "Colombiana",
+                priceNumeric: 15900,
+                priceFormatted: "$15,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; fundada en Medellín en 2018.",
+                brandUrl: "https://www.fedco.com",
+                image: "https://miiscosmetics.com/cdn/shop/files/PSN01UNIDADABIERTA.png?v=1763050569&width=2160"
+            },
+            {
+                name: "Miis Cosmetics",
+                product: "Paleta de sombras Hello Kitty",
+                category: "Sombras",
+                origin: "Colombiana",
+                priceNumeric: 34900,
+                priceFormatted: "$34,900 COP",
+                certification: "Certificada cruelty-free por Te Protejo; fundada en Medellín en 2018.",
+                brandUrl: "https://www.fedco.com",
+                image: "https://miiscosmetics.com/cdn/shop/files/HKC01-4_-_CAJA.jpg?v=1781795795&width=1946"
+            },
+            {
+                name: "Anastasia Beverly Hills",
+                product: "Paleta de Sombras Soft Glam Eye Shadow Palette",
+                category: "Sombras",
+                origin: "Internacional",
+                priceNumeric: 217000,
+                priceFormatted: "$217,000 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.anastasiabeverlyhills.com",
+                image: "https://blushbar.vtexassets.com/arquivos/ids/187043-600-600?v=637564501602330000&width=600&height=600&aspect=true"
+            },
+            {
+                name: "Essence",
+                product: "Bálsamo de Labios Y Mejillas Essence Alice In Wonderland Disney",
+                category: "Labios",
+                origin: "Internacional",
+                priceNumeric: 11300,
+                priceFormatted: "$11,300 COP",
+                certification: "Aparece en el listado de PETA para Colombia.",
+                brandUrl: "https://www.essence.eu",
+                image: "https://prebel.vtexassets.com/arquivos/ids/205896/4059729550507.jpg?v=639196628933700000"
+            },
+
+        ];
+
+        function displayProducts(productsToDisplay) {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+
+            productsToDisplay.sort((a, b) => a.priceNumeric - b.priceNumeric);
+
+            if (productsToDisplay.length === 0) {
+                grid.innerHTML = '<div class="no-results">No se encontraron productos con los filtros seleccionados.</div>';
+                return;
+            }
+
+            productsToDisplay.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                card.innerHTML = `
+                    <div class="card-image-container">
+                        <span class="badge-origin">${item.origin}</span>
+                        <img src="${item.image}" alt="${item.product}">
+                    </div>
+                    <div class="card-content">
+                        <a href="${item.brandUrl}" target="_blank" class="card-brand-link">${item.name}</a>
+                        <div class="card-title">${item.product}</div>
+                        <div class="card-certification">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B6E4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M10 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M12 18c-3 0-5-2-5-5 0-3 2-5 5-5s5 2 5 5c0 3-2 5-5 5z"/></svg>
+                            <span>${item.certification}</span>
+                        </div>
+                        <div class="card-footer">
+                            <span class="card-category">${item.category}</span>
+                            <span class="card-price">${item.priceFormatted}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterProducts() {
+            const origin = document.getElementById('originFilter').value;
+            const product = document.getElementById('productFilter').value;
+
+            let filtered = makeupData.filter(item => {
+                const matchesOrigin = (origin === 'all' || item.origin === origin);
+                const matchesProduct = (product === 'all' || item.category === product);
+                return matchesOrigin && matchesProduct;
+            });
+
+            displayProducts(filtered);
+        }
+
+        window.onload = () => {
+            displayProducts(makeupData);
+        };
+    </script>
+</body>
+</html>
