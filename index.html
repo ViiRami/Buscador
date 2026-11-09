@@ -8,24 +8,33 @@
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* ========================================================
-           1. CONFIGURACIÓN DE COLORES (:ROOT)
-           - --color-bg-cream (#FFF3E3): Fondo general cálido y orgánico.
-           - --color-card-bg (#FFFFFF): Blanco puro para contraste limpio.
-           - --color-sage-green (#3B6E4A): Verde principal eco-amigable.
-           - --color-sage-hover (#2E563B): Variante oscura para interactividad.
-           - --color-text-main (#2C3E35): Gris verdoso de alta legibilidad.
-           - --color-text-muted (#6B7C73): Tono secundario para metadatos.
-           - --color-border (#E2D6C8): Límites visuales armónicos y sutiles.
+            1. PALETA DE COLORES Y VARIABLES GLOBALES (:ROOT)
+            Aquí puedes cambiar la identidad cromática de toda la app.
            ======================================================== */
         :root {
+            /* Fondo general cálido dentro del contenedor principal */
             --color-bg-cream: #FFF3E3;
-            --color-card-bg: #c1baab;
-            --color-sage-green: #778C77;
-            --color-sage-hover: #536254;
-            --color-text-main: #837556;
+            
+            /* Color de fondo de las tarjetas de productos */
+            --color-card-bg: #9BAC92;
+            
+            /* Verde principal eco-amigable (botones, enlaces, bordes activos) */
+            --color-sage-green: #536254;
+            
+            /* Variante oscura del verde principal para efectos hover y estados interactivos */
+            --color-sage-hover: #FFF3E4;
+            
+            /* Color principal para títulos y precios (alta legibilidad) */
+            --color-text-main: #FFF3E4;
+            
+            /* Color secundario/silenciado para metadatos, certificaciones y categorías */
             --color-text-muted: #536254;
-            --color-border: #FFF3E3;
-            --font-main: 'Quicksand', sans-serif; /* 2. TIPOGRAFÍA: Fuente geométrica amigable y juvenil */
+            
+            /* Color de los bordes y líneas sutiles */
+            --color-border: #c0e0d0;
+
+            /* Tipografía geométrica amigable y juvenil */
+            --font-main: 'Quicksand', sans-serif; 
         }
 
         * {
@@ -36,7 +45,12 @@
 
         body {
             font-family: var(--font-main);
-            background-color: #EFE6D8; /* Fondo exterior flotante */
+            /* ========================================================
+                FONDO EXTERIOR FLOTANTE
+                Cambia este color si deseas modificar el fondo que rodea 
+                a todo el contenedor principal de la aplicación.
+               ======================================================== */
+            background-color: #FFF3E4; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,14 +59,12 @@
         }
 
         /* ========================================================
-           3. TAMAÑOS Y CONTENEDOR PRINCIPAL
-           - Ancho: 1848px | Alto: 1044px (Medidas editoriales fijas).
-           - overflow-y: auto (Scroll vertical personalizado y limpio).
+            2. TAMAÑOS Y CONTENEDOR PRINCIPAL
            ======================================================== */
         .app-container {
             width: 1848px;
             height: 1044px;
-            background-color: var(--color-bg-cream);
+            background-color: var(--color-bg-cream); /* Usa la variable global */
             border: 2px solid var(--color-border);
             border-radius: 20px;
             display: flex;
@@ -63,24 +75,26 @@
             box-shadow: 0 15px 35px rgba(59, 110, 74, 0.1);
         }
 
+        /* Estilos de la barra de desplazamiento (Scrollbar) */
         .app-container::-webkit-scrollbar {
             width: 12px;
         }
         .app-container::-webkit-scrollbar-track {
-            background: #F4EADF;
+            background: #b5ac9a; /* Color de la pista del scroll */
             border-radius: 10px;
         }
         .app-container::-webkit-scrollbar-thumb {
-            background-color: var(--color-sage-green);
+            background-color: var(--color-sage-green); /* Color de la barra deslizable */
             border-radius: 10px;
-            border: 3px solid #F4EADF;
+            border: 3px solid #b5ac9a;
         }
 
         /* Panel de Filtros Superior */
         .filters-panel {
             display: flex;
             gap: 25px;
-            background-color: #F8EFE3;
+            /* Color de fondo del panel de filtros superior */
+            background-color: #9BAC92; 
             padding: 25px 30px;
             border-radius: 16px;
             border: 1px solid var(--color-border);
@@ -108,7 +122,8 @@
             padding: 12px 18px;
             border-radius: 10px;
             border: 1px solid var(--color-border);
-            background-color: #FFFFFF;
+            /* Color de fondo de los menús desplegables */
+            background-color: #b5ac9a; 
             font-family: var(--font-main);
             font-size: 1rem;
             color: var(--color-text-main);
@@ -117,9 +132,13 @@
             cursor: pointer;
         }
 
+        /* ========================================================
+            INTERACCIÓN: FOCO EN FILTROS
+            Cambia el color del borde y sombra cuando el usuario hace clic o navega en los selectores.
+           ======================================================== */
         .filter-group select:focus {
             border-color: var(--color-sage-green);
-            box-shadow: 0 0 0 3px rgba(59, 110, 74, 0.15);
+            box-shadow: 0 0 0 3px #b5ac9a;
         }
 
         /* Cuadrícula Adaptativa de Tarjetas */
@@ -139,10 +158,13 @@
             display: flex;
             flex-direction: column;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 12px #b5ac9a;
         }
 
-        /* Efecto Hover tridimensional de elevación */
+        /* ========================================================
+            INTERACCIÓN: HOVER TRIDIMENSIONAL DE ELEVACIÓN EN TARJETAS
+            Aquí se define cómo se eleva la tarjeta al pasar el cursor por encima.
+           ======================================================== */
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(59, 110, 74, 0.12);
@@ -151,7 +173,8 @@
         .card-image-container {
             width: 100%;
             height: 200px;
-            background-color: #F4EADF;
+            /* Color de fondo por si la imagen tarda en cargar */
+            background-color: #F4EADF; 
             position: relative;
             display: flex;
             align-items: center;
@@ -169,8 +192,9 @@
             position: absolute;
             top: 15px;
             left: 15px;
-            background-color: rgba(59, 110, 74, 0.9);
-            color: white;
+            /* Color de fondo de la etiqueta de origen (Colombiana/Internacional) */
+            background-color: #778C77; 
+            color: #FFF3E4;
             padding: 5px 12px;
             border-radius: 20px;
             font-size: 0.85rem;
@@ -186,9 +210,9 @@
         }
 
         /* ========================================================
-           4. CONFIGURACIÓN DE ENLACES E INTERACTIVIDAD
-           - .card-brand-link: Convierte el nombre en hipervínculo activo.
-           - target="_blank": Abre la web oficial en pestaña nueva.
+            3. INTERACCIÓN DE ENLACES DE MARCA
+            - .card-brand-link: Convierte el nombre en hipervínculo activo.
+            - target="_blank": Abre la web oficial en pestaña nueva.
            ======================================================== */
         .card-brand-link {
             font-size: 1.1rem;
@@ -199,6 +223,7 @@
             transition: color 0.2s;
         }
 
+        /* Color y efecto al pasar el cursor sobre el nombre de la marca */
         .card-brand-link:hover {
             color: var(--color-sage-hover);
             text-decoration: underline;
@@ -225,12 +250,14 @@
             align-items: center;
             margin-top: auto;
             padding-top: 12px;
-            border-top: 1px solid #F0E6DA;
+            /* Color de la línea divisoria inferior de la tarjeta */
+            border-top: 1px solid #3c463c; 
         }
 
         .card-category {
             font-size: 0.85rem;
-            background-color: #F3EBE1;
+            /* Color de fondo de la etiqueta de categoría (Base, Labial, etc.) */
+            background-color: #778C77; 
             padding: 4px 10px;
             border-radius: 6px;
             color: var(--color-text-muted);
@@ -636,8 +663,7 @@
                 certification: "Aparece en el listado de PETA para Colombia.",
                 brandUrl: "https://www.essence.eu",
                 image: "https://prebel.vtexassets.com/arquivos/ids/205896/4059729550507.jpg?v=639196628933700000"
-            },
-
+            }
         ];
 
         function displayProducts(productsToDisplay) {
